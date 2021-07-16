@@ -4,7 +4,6 @@
 'use strict';
 
 const bedrock = require('bedrock');
-const {util: {clone}} = bedrock;
 const {documentLoader} = require('bedrock-jsonld-document-loader');
 const {Ed25519Signature2020} =
   require('@digitalbazaar/ed25519-signature-2020');
@@ -13,11 +12,13 @@ const {Ed25519VerificationKey2020} =
 const jsigs = require('jsonld-signatures');
 const jsonld = require('jsonld');
 const jsonpatch = require('fast-json-patch');
-const mockData = require('./mock.data');
 const voValidator = require('veres-one-validator');
 const {CapabilityInvocation} = require('@digitalbazaar/zcapld');
-const v1 = require('did-veres-one').driver();
+const mockData = require('./mock.data');
 const {VeresOneDidDoc} = require('did-veres-one');
+const v1 = require('did-veres-one').driver();
+
+const {util: {clone}} = bedrock;
 
 describe('validate regular DIDs', () => {
   describe('validate API', () => {
@@ -985,6 +986,7 @@ describe('validate regular DIDs', () => {
       // FIXME: add a write proof for the accelerator that will pass
       // json-schema validation for testnet v2 *not* a valid signature
       mockOperation.proof = clone(mockData.proof);
+      // signing with a key from another valid DID
       const s = await jsigs.sign(mockOperation, {
         documentLoader,
         suite: new Ed25519Signature2020({key: capabilityInvocationKey}),
@@ -1370,7 +1372,6 @@ describe('validate regular DIDs', () => {
         // validation for
         // testnet v2 *not* a valid signature
         mockOperation.proof = clone(mockData.proof);
-
         const s = await jsigs.sign(mockOperation, {
           documentLoader,
           suite: new Ed25519Signature2020({key: capabilityInvocationKey}),
@@ -1399,7 +1400,6 @@ describe('validate regular DIDs', () => {
         const mockOperation = clone(mockData.operations.update);
         const capabilityAction = 'write';
         mockData.existingDids[did] = clone(didDocument);
-
         updater.observe();
 
         _addService({
@@ -1450,9 +1450,7 @@ describe('validate regular DIDs', () => {
         const mockOperation = clone(mockData.operations.update);
         const capabilityAction = 'write';
         mockData.existingDids[did] = clone(didDocument);
-
         updater.observe();
-
         _addService({
           updater,
           fragment: 'foo',
@@ -1469,7 +1467,6 @@ describe('validate regular DIDs', () => {
         // validation for
         // testnet v2 *not* a valid signature
         mockOperation.proof = clone(mockData.proof);
-
         const s = await jsigs.sign(mockOperation, {
           documentLoader,
           suite: new Ed25519Signature2020({key: capabilityInvocationKey}),

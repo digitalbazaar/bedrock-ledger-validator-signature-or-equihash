@@ -5,11 +5,17 @@
 
 const {config: {constants}} = require('bedrock');
 const {schemas} = require('bedrock-validation');
+const {maxLength} = require('../lib/constants');
 const did = require('./did');
 const didReference = require('./didReference');
 const didUuid = require('./did-uuid');
 const {serviceDescriptor, serviceId} = require('./service');
 const urnUuid = require('./urn-uuid');
+
+// can be a did or a url
+const creator = {
+  anyOf: [schemas.url(), did(), didReference(), didUuid()]
+};
 
 const caveat = {
   additionalProperties: false,
@@ -20,10 +26,15 @@ const caveat = {
   properties: {
     type: {
       type: 'string',
+      maxLength
       // FIXME: enable when term is finalized
       // enum: ['VeresOneElectorTicketAgent']
     }
   }
+};
+
+const invocationTarget = {
+  anyOf: [did(), didUuid(), urnUuid()]
 };
 
 const capability = {
@@ -41,11 +52,8 @@ const capability = {
       items: caveat,
     },
     id: did(),
-    invocationTarget: {
-      // FIXME: more specific pattern?
-      type: 'string',
-    }
-  },
+    invocationTarget
+  }
 };
 
 const operationValidator = {
@@ -117,21 +125,21 @@ const publicKey = {
   required: [
     'controller',
     'id',
-    'type'
+    'type',
+    'publicKeyMultibase'
   ],
   type: 'object',
   properties: {
-    id: {
-      type: 'string',
-    },
+    id: didReference(),
     type: {
       type: 'string',
       enum: ['Ed25519VerificationKey2020', 'X25519KeyAgreementKey2020'],
     },
     controller: did(),
-    // FIXME: make schema require this for Ed25519VerificationKey2020
     publicKeyMultibase: {
-      type: 'string'
+      type: 'string',
+      // multibase base58 encoding of multicodec public key
+      maxLength: 48
     }
   },
 };
@@ -168,12 +176,8 @@ const didDocument = {
     '@context': didDocumentContext,
     id: did(),
     // FIXME: be more specific with restrictions for all properties below
-    invocationTarget: {
-      type: 'string',
-    },
-    invoker: {
-      type: 'string',
-    },
+    invocationTarget,
+    invoker: did(),
     assertionMethod: {
       type: 'array',
       minItems: 1,
@@ -305,9 +309,11 @@ const didDocumentPatch = {
           },
           from: {
             type: 'string',
+            maxLength
           },
           path: {
             type: 'string',
+            maxLength
           },
           value: {
             //type: ['number', 'string', 'boolean', 'object', 'array'],
@@ -422,6 +428,7 @@ const validatorParameterSet = {
         // FIXME: how should these be validated beyond string?
         // pattern startswith https:// ?
         type: 'string',
+        maxLength
       }
     }
   },
@@ -440,15 +447,24 @@ const baseCapability = {
     'type'
   ],
   properties: {
-    capability: {type: 'string'},
+    // FIXME add a deterministic length for capability
+    capability: {
+      type: 'string',
+      maxLength
+    },
     capabilityAction: {
       type: 'string',
       enum: ['write'],
     },
     created: schemas.w3cDateTime(),
-    creator: {type: 'string'},
-    invocationTarget: {type: 'string'},
-    proofValue: {type: 'string'},
+    invocationTarget,
+    proofValue: {
+      type: 'string',
+      // this should be the multibase base58 representation of a 64-byte
+      // ed25519 signature value; this is max 89 characters
+      maxLength: 89
+    },
+    creator,
     proofPurpose: {
       type: 'string',
       enum: ['capabilityInvocation'],
@@ -457,7 +473,7 @@ const baseCapability = {
       type: 'string',
       enum: ['Ed25519Signature2020']
     },
-    verificationMethod: {type: 'string'},
+    verificationMethod: didReference()
   }
 };
 
@@ -482,7 +498,11 @@ const writeCapability = {
       properties: {
         capabilityAction: {
           enum: ['write'],
-        }
+        },
+        // FIXME: this is for testnet v2 only
+        jws: {
+          enum: ['MOCKPROOF'],
+        },
       }
     }]
 };
@@ -503,7 +523,7 @@ const updateWebLedgerRecord = {
       constants.WEB_LEDGER_CONTEXT_V1_URL,
       constants.ED25519_2020_CONTEXT_V1_URL,
     ]),
-    creator: {type: 'string'},
+    creator,
     type: {const: 'UpdateWebLedgerRecord',
     },
     recordPatch: didDocumentPatch,
@@ -538,7 +558,7 @@ const ledgerConfiguration = {
       constants.ED25519_2020_CONTEXT_V1_URL
     ]),
     consensusMethod: {const: 'Continuity2017'},
-    creator: {type: 'string'},
+    creator,
     electorSelectionMethod: {
       additionalProperties: false,
       required: [
@@ -563,6 +583,7 @@ const ledgerConfiguration = {
     ledger: {
       // FIXME: enforce? did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59
       type: 'string',
+      maxLength
     },
     ledgerConfigurationValidator: {
       type: 'array',
@@ -648,7 +669,7 @@ const createWebLedgerRecord = {
       constants.WEB_LEDGER_CONTEXT_V1_URL,
       constants.ED25519_2020_CONTEXT_V1_URL
     ]),
-    creator: {type: 'string'},
+    creator,
     type: {const: 'CreateWebLedgerRecord'},
     proof: {
       anyOf: [{

@@ -291,7 +291,7 @@ describe('validate API ElectorPool', () => {
         // write proof
         operation = await attachInvocationProof({
           operation,
-          algorithm: 'Ed25519Signature2018',
+          algorithm: 'Ed25519Signature2020',
           capability: maintainerDid,
           capabilityAction: 'write',
           invocationTarget: maintainerDid,
@@ -299,7 +299,7 @@ describe('validate API ElectorPool', () => {
         });
         operation = await attachInvocationProof({
           operation,
-          algorithm: 'Ed25519Signature2018',
+          algorithm: 'Ed25519Signature2020',
           capability: maintainerDid,
           capabilityAction: 'write',
           invocationTarget: operation.record.id,

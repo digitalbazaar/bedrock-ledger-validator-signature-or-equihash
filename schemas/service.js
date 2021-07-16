@@ -4,6 +4,7 @@
 'use strict';
 
 const bedrock = require('bedrock');
+const {maxLength} = require('../lib/constants');
 const {config} = bedrock;
 require('../lib/config');
 
@@ -20,6 +21,7 @@ const serviceId = {
   title: 'Service Identifier',
   description: 'A service identifier.',
   type: 'string',
+  maxLength,
   // FIXME: a service ID can be any type of URL, not just did: ??
   // pattern,
 };
@@ -39,10 +41,13 @@ const serviceDescriptor = {
       // FIXME: this will be validated on some const TBD, possibly
       // SeeAlsoService
       type: 'string',
+      minLength: 2,
+      maxLength
     },
     serviceEndpoint: {
       // TODO: can this be improved? pattern starting with https://?
       type: 'string',
+      maxLength
     }
   }
 };
