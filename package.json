@@ -16,14 +16,14 @@
   },
   "homepage": "https://github.com/veres-one/veres-one-validator#readme",
   "dependencies": {
-    "@digitalbazaar/ed25519-signature-2018": "digitalbazaar/ed25519-signature-2018#v1",
-    "@digitalbazaar/ed25519-verification-key-2018": "^3.0.0",
-    "@digitalbazaar/zcapld": "^3.0.0",
+    "@digitalbazaar/ed25519-signature-2020": "^3.0.0",
+    "@digitalbazaar/ed25519-verification-key-2020": "^3.1.0",
+    "@digitalbazaar/zcapld": "^5.0.0",
     "bs58": "^4.0.1",
     "did-context": "^3.0.1",
-    "did-veres-one": "^12.0.0",
+    "did-veres-one": "github:veres-one/did-veres-one#v14.x",
     "fast-json-patch": "^2.0.6",
-    "jsonld-signatures": "^8.0.0",
+    "jsonld-signatures": "^9.0.0",
     "lodash": "^4.17.11",
     "multibase": "^3.0.1",
     "multicodec": "^2.0.1"
@@ -31,11 +31,11 @@
   "peerDependencies": {
     "bedrock": "2.x - 3.x",
     "bedrock-jsonld-document-loader": "^1.0.0",
-    "bedrock-ledger-context": "^15.0.0",
+    "bedrock-ledger-context": "^18.1.0",
     "bedrock-ledger-node": "^10.0.0",
     "bedrock-ledger-utils": "^1.0.0",
-    "bedrock-validation": "^4.0.0",
-    "bedrock-veres-one-context": "^10.0.0"
+    "bedrock-validation": "^5.1.0",
+    "bedrock-veres-one-context": "^11.0.0"
   },
   "devDependencies": {
     "eslint": "^7.10.0",

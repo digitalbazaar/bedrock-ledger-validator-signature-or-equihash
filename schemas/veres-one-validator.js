@@ -6,6 +6,7 @@
 const {config: {constants}} = require('bedrock');
 const {schemas} = require('bedrock-validation');
 const did = require('./did');
+const didReference = require('./didReference');
 const didUuid = require('./did-uuid');
 const {serviceDescriptor, serviceId} = require('./service');
 const urnUuid = require('./urn-uuid');
@@ -116,7 +117,7 @@ const publicKey = {
   required: [
     'controller',
     'id',
-    'type',
+    'type'
   ],
   type: 'object',
   properties: {
@@ -125,26 +126,36 @@ const publicKey = {
     },
     type: {
       type: 'string',
-      enum: ['RsaVerificationKey2018', 'Ed25519VerificationKey2018'],
+      enum: ['Ed25519VerificationKey2020', 'X25519KeyAgreementKey2020'],
     },
     controller: did(),
-    // FIXME: make schema require this for RsaVerificationKey2018
-    publicKeyPem: schemas.publicKeyPem(),
-    // FIXME: make schema require this for Ed25519VerificationKey2018
-    publicKeyBase58: {
-      type: 'string',
+    // FIXME: make schema require this for Ed25519VerificationKey2020
+    publicKeyMultibase: {
+      type: 'string'
     }
   },
 };
 
 const didDocumentContext = {
   type: 'array',
-  items: [{
-    const: constants.DID_CONTEXT_URL
-  }, {
-    const: constants.VERES_ONE_CONTEXT_V1_URL
-  }],
-  maxItems: 2,
+  items: [
+    {
+      // the first context should be the DID Context
+      const: constants.DID_CONTEXT_URL
+    }, {
+      // the second context should be the V1 Context
+      const: constants.VERES_ONE_CONTEXT_V1_URL
+    }, {
+      // the remaining 2 contexts can be any of these
+      anyOf: [{
+        const: constants.WEB_LEDGER_CONTEXT_V1_URL
+      }, {
+        const: constants.ED25519_2020_CONTEXT_V1_URL
+      }, {
+        const: constants.X25519_2020_CONTEXT_V1_URL
+      }]}
+  ],
+  maxItems: 4,
   minItems: 2,
 };
 
@@ -166,22 +177,37 @@ const didDocument = {
     assertionMethod: {
       type: 'array',
       minItems: 1,
-      items: publicKey,
+      items: {
+        anyOf: [didReference(), publicKey]
+      }
     },
     authentication: {
       type: 'array',
       minItems: 1,
-      items: publicKey,
+      items: {
+        anyOf: [didReference(), publicKey]
+      }
     },
     capabilityDelegation: {
       type: 'array',
       minItems: 1,
-      items: publicKey,
+      items: {
+        anyOf: [didReference(), publicKey]
+      }
     },
     capabilityInvocation: {
       type: 'array',
       minItems: 1,
-      items: publicKey,
+      items: {
+        anyOf: [didReference(), publicKey]
+      }
+    },
+    keyAgreement: {
+      type: 'array',
+      minItems: 1,
+      items: {
+        anyOf: [didReference(), publicKey]
+      }
     },
     service: {
       type: 'array',
@@ -408,7 +434,8 @@ const baseCapability = {
     'capability',
     'capabilityAction',
     'created',
-    'jws',
+    'invocationTarget',
+    'proofValue',
     'proofPurpose',
     'type'
   ],
@@ -416,18 +443,19 @@ const baseCapability = {
     capability: {type: 'string'},
     capabilityAction: {
       type: 'string',
-      enum: ['write', 'create', 'update'],
+      enum: ['write'],
     },
     created: schemas.w3cDateTime(),
     creator: {type: 'string'},
-    jws: {type: 'string'},
+    invocationTarget: {type: 'string'},
+    proofValue: {type: 'string'},
     proofPurpose: {
       type: 'string',
       enum: ['capabilityInvocation'],
     },
     type: {
       type: 'string',
-      enum: ['RsaSignature2018', 'Ed25519Signature2018']
+      enum: ['Ed25519Signature2020']
     },
     verificationMethod: {type: 'string'},
   }
@@ -454,35 +482,7 @@ const writeCapability = {
       properties: {
         capabilityAction: {
           enum: ['write'],
-        },
-        // FIXME: this is for testnet v2 only
-        jws: {
-          enum: ['MOCKPROOF'],
-        },
-      }
-    }]
-};
-
-const createCapability = {
-  allOf: [
-    baseCapability,
-    creatorOrVerificationMethod, {
-      properties: {
-        capabilityAction: {
-          enum: ['create'],
-        },
-      }
-    }]
-};
-
-const updateDidCapability = {
-  allOf: [
-    baseCapability,
-    creatorOrVerificationMethod, {
-      properties: {
-        capabilityAction: {
-          enum: ['update'],
-        },
+        }
       }
     }]
 };
@@ -499,7 +499,10 @@ const updateWebLedgerRecord = {
   ],
   additionalProperties: false,
   properties: {
-    '@context': schemas.jsonldContext(constants.WEB_LEDGER_CONTEXT_V1_URL),
+    '@context': schemas.jsonldContext([
+      constants.WEB_LEDGER_CONTEXT_V1_URL,
+      constants.ED25519_2020_CONTEXT_V1_URL,
+    ]),
     creator: {type: 'string'},
     type: {const: 'UpdateWebLedgerRecord',
     },
@@ -507,11 +510,7 @@ const updateWebLedgerRecord = {
     proof: {
       anyOf: [{
         type: 'array',
-        items: [writeCapability, updateDidCapability],
-        additionalItems: false,
-      }, {
-        type: 'array',
-        items: [updateDidCapability, writeCapability],
+        items: [writeCapability, writeCapability],
         additionalItems: false,
       }],
     }
@@ -534,7 +533,10 @@ const ledgerConfiguration = {
   ],
   type: 'object',
   properties: {
-    '@context': schemas.jsonldContext(constants.WEB_LEDGER_CONTEXT_V1_URL),
+    '@context': schemas.jsonldContext([
+      constants.WEB_LEDGER_CONTEXT_V1_URL,
+      constants.ED25519_2020_CONTEXT_V1_URL
+    ]),
     consensusMethod: {const: 'Continuity2017'},
     creator: {type: 'string'},
     electorSelectionMethod: {
@@ -581,7 +583,7 @@ const ledgerConfiguration = {
     },
     proof: {
       allOf: [
-        schemas.linkedDataSignature2018(), {
+        schemas.linkedDataSignature2020(), {
           // FIXME: this is only for testnet_v2
           type: 'object',
           required: ['proofPurpose'],
@@ -642,17 +644,16 @@ const createWebLedgerRecord = {
   ],
   additionalProperties: false,
   properties: {
-    '@context': schemas.jsonldContext(constants.WEB_LEDGER_CONTEXT_V1_URL),
+    '@context': schemas.jsonldContext([
+      constants.WEB_LEDGER_CONTEXT_V1_URL,
+      constants.ED25519_2020_CONTEXT_V1_URL
+    ]),
     creator: {type: 'string'},
     type: {const: 'CreateWebLedgerRecord'},
     proof: {
       anyOf: [{
         type: 'array',
-        items: [writeCapability, createCapability],
-        additionalItems: false,
-      }, {
-        type: 'array',
-        items: [createCapability, writeCapability],
+        items: [writeCapability, writeCapability],
         additionalItems: false,
       }],
     },

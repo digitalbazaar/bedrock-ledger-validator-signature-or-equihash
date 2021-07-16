@@ -8,11 +8,9 @@ const {util: {clone}} = require('bedrock');
 const jsigs = require('jsonld-signatures');
 const mockData = require('./mock.data');
 const voValidator = require('veres-one-validator');
-const v1 = new (require('did-veres-one')).VeresOne();
-const {Ed25519Signature2018} =
-  require('@digitalbazaar/ed25519-signature-2018');
-const {Ed25519VerificationKey2018} =
-  require('@digitalbazaar/ed25519-verification-key-2018');
+const v1 = require('did-veres-one').driver();
+const {Ed25519Signature2020} =
+  require('@digitalbazaar/ed25519-signature-2020');
 const {purposes: {AssertionProofPurpose}} = jsigs;
 
 describe('validate API WebLedgerConfiguration', () => {
@@ -22,15 +20,13 @@ describe('validate API WebLedgerConfiguration', () => {
     // The public key material is derived from the nym DID because the
     // maintainers DID does not yet exist on the ledger
     const maintainerDoc = await v1.generate();
-    const method = maintainerDoc.getVerificationMethod(
-      {proofPurpose: 'capabilityInvocation'});
-    const signingKey = new Ed25519VerificationKey2018(
-      maintainerDoc.keys[method.id]
-    );
+    const signingKey =
+      maintainerDoc.methodFor({purpose: 'capabilityInvocation'});
+
     const s = await jsigs.sign(ledgerConfiguration, {
       compactProof: false,
       documentLoader,
-      suite: new Ed25519Signature2018({key: signingKey}),
+      suite: new Ed25519Signature2020({key: signingKey}),
       purpose: new AssertionProofPurpose()
     });
 
@@ -50,15 +46,12 @@ describe('validate API WebLedgerConfiguration', () => {
     // The public key material is derived from the nym DID because the
     // maintainers DID does not yet exist on the ledger
     const maintainerDoc = await v1.generate();
-    const method = maintainerDoc.getVerificationMethod(
-      {proofPurpose: 'capabilityInvocation'});
-    const signingKey = new Ed25519VerificationKey2018(
-      maintainerDoc.keys[method.id]
-    );
+    const signingKey =
+      maintainerDoc.methodFor({purpose: 'capabilityInvocation'});
     const s = await jsigs.sign(ledgerConfiguration, {
       compactProof: false,
       documentLoader,
-      suite: new Ed25519Signature2018({key: signingKey}),
+      suite: new Ed25519Signature2020({key: signingKey}),
       purpose: new AssertionProofPurpose()
     });
 
@@ -80,15 +73,12 @@ describe('validate API WebLedgerConfiguration', () => {
     // The public key material is derived from the nym DID because the
     // maintainers DID does not yet exist on the ledger
     const maintainerDoc = await v1.generate();
-    const method = maintainerDoc.getVerificationMethod(
-      {proofPurpose: 'capabilityInvocation'});
-    const signingKey = new Ed25519VerificationKey2018(
-      maintainerDoc.keys[method.id]
-    );
+    const signingKey =
+      maintainerDoc.methodFor({purpose: 'capabilityInvocation'});
     const s = await jsigs.sign(ledgerConfiguration, {
       compactProof: false,
       documentLoader,
-      suite: new Ed25519Signature2018({key: signingKey}),
+      suite: new Ed25519Signature2020({key: signingKey}),
       purpose: new AssertionProofPurpose()
     });
 
@@ -108,21 +98,17 @@ describe('validate API WebLedgerConfiguration', () => {
     // The public key material is derived from the nym DID because the
     // maintainers DID does not yet exist on the ledger
     const maintainerDoc = await v1.generate();
-    const method = maintainerDoc.getVerificationMethod(
-      {proofPurpose: 'capabilityInvocation'});
-    const signingKey = new Ed25519VerificationKey2018(
-      maintainerDoc.keys[method.id]
-    );
+    const signingKey =
+      maintainerDoc.methodFor({purpose: 'capabilityInvocation'});
     const s = await jsigs.sign(ledgerConfiguration, {
       compactProof: false,
       documentLoader,
-      suite: new Ed25519Signature2018({key: signingKey}),
+      suite: new Ed25519Signature2020({key: signingKey}),
       purpose: new AssertionProofPurpose()
     });
     // replace the proof with a bad one
-    s.proof.jws = 'eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..' +
-      '9LEA2y7gTD4a009s7LTPQvWTjF23vdAuwGyMhRwaOlD6L5uSDw7ETEItcmXE4OGHKsiRN' +
-      'pOE1Z2Pv3V3hDO-CA';
+    s.proof.proofValue = 'z2p7cVPKsvUHzSfMQxziNPmzE7xx5nVHDZG1ZWYCk41gQJxxYr' +
+      'rp3Uaqm9Q54e3fe8xaXDpTCctHeGNDB2vw71LZw';
     const result = await voValidator.validate({
       ledgerNode: mockData.ledgerNode,
       validatorInput: s,
@@ -139,23 +125,17 @@ describe('validate API WebLedgerConfiguration', () => {
     // The public key material is derived from the nym DID because the
     // maintainers DID does not yet exist on the ledger
     const maintainerDoc = await v1.generate();
-    const method = maintainerDoc.getVerificationMethod(
-      {proofPurpose: 'capabilityInvocation'});
-    const signingKey = new Ed25519VerificationKey2018(
-      maintainerDoc.keys[method.id]
-    );
+    const signingKey =
+      maintainerDoc.methodFor({purpose: 'capabilityInvocation'});
     const s = await jsigs.sign(ledgerConfiguration, {
       compactProof: false,
       documentLoader,
-      suite: new Ed25519Signature2018({key: signingKey}),
+      suite: new Ed25519Signature2020({key: signingKey}),
       purpose: new AssertionProofPurpose()
     });
-
     s.proof.verificationMethod =
-      'did:v1:nym:z6MksN1qAquFzdSgXwVTAYuuLGfckt3UpkhHwFwPsbSiwrUB#' +
-      // the leading `z` has been removed here to break the encoding
-      // 6 is not a valid encoding prefix
-      '6MksN1qAquFzdSgXwVTAYuuLGfckt3UpkhHwFwPsbSiwrUB';
+      'did:v1:nym:z6MknbD3kDazNR5K5Aj9HtxsaqS1s2NUcTxescFdvZryECFx#' +
+      '6MknbD3kDazNR5K5Aj9HtxsaqS1s2NUcTxescFdvZryECFx';
 
     const result = await voValidator.validate({
       ledgerNode: mockData.ledgerNode,
@@ -167,7 +147,8 @@ describe('validate API WebLedgerConfiguration', () => {
     should.exist(result.error);
     result.error.message.should.contain(
       'The signing key is not properly encoded.');
-    result.error.cause.message.should.contain('Unsupported encoding');
+    result.error.cause.message.should.contain(
+      '"publicKeyMultibase" has invalid header bytes');
   });
   it('rejects configuration signed with an invalid nym did', async () => {
     const ledgerConfiguration = clone(mockData.ledgerConfigurations.alpha);
@@ -175,15 +156,12 @@ describe('validate API WebLedgerConfiguration', () => {
     // The public key material is derived from the nym DID because the
     // maintainers DID does not yet exist on the ledger
     const maintainerDoc = await v1.generate();
-    const method = maintainerDoc.getVerificationMethod(
-      {proofPurpose: 'capabilityInvocation'});
-    const signingKey = new Ed25519VerificationKey2018(
-      maintainerDoc.keys[method.id]
-    );
+    const signingKey =
+      maintainerDoc.methodFor({purpose: 'capabilityInvocation'});
     const s = await jsigs.sign(ledgerConfiguration, {
       compactProof: false,
       documentLoader,
-      suite: new Ed25519Signature2018({key: signingKey}),
+      suite: new Ed25519Signature2020({key: signingKey}),
       purpose: new AssertionProofPurpose()
     });
 
@@ -202,7 +180,7 @@ describe('validate API WebLedgerConfiguration', () => {
     should.exist(result.error);
     result.error.message.should.contain(
       'The signing key is not properly encoded.');
-    result.error.cause.message.should.equal(
-      'Key ID is not a multiformats encoded ed25519 public key.');
+    result.error.cause.message.should.contain(
+      '"publicKeyMultibase" has invalid header bytes');
   });
 });
