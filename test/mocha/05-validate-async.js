@@ -245,7 +245,7 @@ describe('validate regular DIDs', () => {
 
     describe('Create DID with a service', () => {
       const validatorParameterSet =
-        'did:v1:uuid:b49fc147-5966-4407-a428-b597a77461ba';
+        'did:v1:test:uuid:b49fc147-5966-4407-a428-b597a77461ba';
       const validatorConfig = clone(mockData.ledgerConfigurations.alpha
         .operationValidator[0]);
       validatorConfig.validatorParameterSet = validatorParameterSet;
@@ -328,7 +328,7 @@ describe('validate regular DIDs', () => {
         const configMissingValidatorParameterSet = clone(validatorConfig);
         // this DID triggers a TerribleValidatorParameterSetError
         configMissingValidatorParameterSet.validatorParameterSet =
-          'did:v1:uuid:40aea416-73b2-436f-bb91-41175494d72b';
+          'did:v1:test:uuid:40aea416-73b2-436f-bb91-41175494d72b';
         const result = await voValidator.validate({
           basisBlockHeight: 0,
           ledgerNode: mockData.ledgerNode,
@@ -637,7 +637,7 @@ describe('validate regular DIDs', () => {
       const observer = jsonpatch.observe(mockDoc);
 
       mockDoc.id =
-        'did:v1:nym:z6MknY7qbTmVNPUC2xRyfSzcf3LxQGBx4t8uBVhGkKq7XXXX';
+        'did:v1:test:nym:z6MknY7qbTmVNPUC2xRyfSzcf3LxQGBx4t8uBVhGkKq7XXXX';
 
       const newKey = await Ed25519VerificationKey2020.generate({
         controller: did
@@ -1281,7 +1281,7 @@ describe('validate regular DIDs', () => {
 
     describe('Updates involving services', () => {
       const validatorParameterSet =
-        'did:v1:uuid:b49fc147-5966-4407-a428-b597a77461ba';
+        'did:v1:test:uuid:b49fc147-5966-4407-a428-b597a77461ba';
       const validatorConfig = clone(mockData.ledgerConfigurations.alpha
         .operationValidator[0]);
       validatorConfig.validatorParameterSet = validatorParameterSet;
@@ -1590,7 +1590,7 @@ async function _generateBadDid() {
   const capabilityInvocationKey = await Ed25519VerificationKey2020.generate();
   const keyFingerprint = capabilityInvocationKey.fingerprint();
 
-  const did = `did:v1:nym:${keyFingerprint}`;
+  const did = `did:v1:test:nym:${keyFingerprint}`;
   // cryptonym dids are based on fingerprint of capabilityInvokation key
   mockDoc.id = did;
   capabilityInvocationKey.id = _generateKeyId(
@@ -1611,7 +1611,7 @@ async function _generateDid() {
   const capabilityInvocationKey = await Ed25519VerificationKey2020.generate();
   const keyFingerprint = capabilityInvocationKey.fingerprint();
 
-  const did = `did:v1:nym:${keyFingerprint}`;
+  const did = `did:v1:test:nym:${keyFingerprint}`;
   // cryptonym dids are based on fingerprint of capabilityInvokation key
   mockDoc.id = did;
   capabilityInvocationKey.id = _generateKeyId(

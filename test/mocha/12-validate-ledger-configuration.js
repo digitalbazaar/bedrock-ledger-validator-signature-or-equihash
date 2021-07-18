@@ -134,7 +134,7 @@ describe('validate API WebLedgerConfiguration', () => {
       purpose: new AssertionProofPurpose()
     });
     s.proof.verificationMethod =
-      'did:v1:nym:z6MknbD3kDazNR5K5Aj9HtxsaqS1s2NUcTxescFdvZryECFx#' +
+      'did:v1:test:nym:z6MknbD3kDazNR5K5Aj9HtxsaqS1s2NUcTxescFdvZryECFx#' +
       '6MknbD3kDazNR5K5Aj9HtxsaqS1s2NUcTxescFdvZryECFx';
 
     const result = await voValidator.validate({
@@ -166,7 +166,7 @@ describe('validate API WebLedgerConfiguration', () => {
     });
 
     s.proof.verificationMethod =
-      'did:v1:nym:z6MksN1qAquFzdSgXwVTAYuuLGfckt3UpkhHwFwPsbSiwrUB#' +
+      'did:v1:test:nym:z6MksN1qAquFzdSgXwVTAYuuLGfckt3UpkhHwFwPsbSiwrUB#' +
       // the 9 here specifies a decimal encoding
       '91234';
 

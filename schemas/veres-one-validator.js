@@ -543,7 +543,7 @@ const ledgerConfiguration = {
   required: [
     '@context',
     'consensusMethod',
-    'electorSelectionMethod',
+    'witnessSelectionMethod',
     'ledger',
     'ledgerConfigurationValidator',
     'operationValidator',
@@ -559,7 +559,7 @@ const ledgerConfiguration = {
     ]),
     consensusMethod: {const: 'Continuity2017'},
     creator,
-    electorSelectionMethod: {
+    witnessSelectionMethod: {
       additionalProperties: false,
       required: [
         // maximumElectorCount is *not* required in the configuration

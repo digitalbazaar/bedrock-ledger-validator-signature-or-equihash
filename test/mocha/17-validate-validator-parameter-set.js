@@ -89,7 +89,7 @@ describe('validate API ValidatorParameterSet', () => {
       it('rejects op with doc ID that does not match the config', async () => {
         const validatorParameterSetDoc = _generateValidatorParameterSetDoc();
         validatorParameterSetDoc.id =
-          'did:v1:uuid:4da302e3-0fe0-49c6-a7c3-55ff4e1ef5fa';
+          'did:v1:test:uuid:4da302e3-0fe0-49c6-a7c3-55ff4e1ef5fa';
         let operation = await _wrap(
           {didDocument: validatorParameterSetDoc, operationType: 'create'});
         const key = _getMaintainerKeys();
@@ -422,7 +422,7 @@ describe('validate API ValidatorParameterSet', () => {
 
         // attempt to change document id
         validatorParameterSetDoc.type =
-          'did:v1:uuid:f6648d4e-6e4c-4c35-b7b4-2e045f207c2d';
+          'did:v1:test:uuid:f6648d4e-6e4c-4c35-b7b4-2e045f207c2d';
 
         const patch = jsonpatch.generate(observer);
 

@@ -44,19 +44,20 @@ const validatorParameterSet = mock.validatorParameterSet = {};
 mock.proof = {
   type: 'Ed25519Signature2020',
   created: '2021-01-10T23:10:25Z',
-  capability: 'did:v1:uuid:c37e914a-1e2a-4d59-9668-ee93458fd19a',
+  capability: 'did:v1:test:uuid:c37e914a-1e2a-4d59-9668-ee93458fd19a',
   capabilityAction: 'write',
-  invocationTarget: 'did:v1:nym:ledger',
+  invocationTarget: 'did:v1:test:nym:z6MkgUj',
   proofPurpose: 'capabilityInvocation',
   proofValue: 'z3t9it5yhFHkqWnHKMQ2DWVj7aHDN37f95UzhQYQGYd9LyTSGzufCiTwDWN' +
     'fCdxQA9ZHcTTVAhHwoAji2AJnk2E6',
-  verificationMethod: 'did:v1:nym:z279yHL6HsxRzCPU78DAWgZVieb8xPK1mJKJBb' +
+  verificationMethod: 'did:v1:test:nym:z279yHL6HsxRzCPU78DAWgZVieb8xPK1mJKJBb' +
     'P8T2CezuFY#z279tKmToKKMjQ8tsCgTbBBthw5xEzHWL6GCqZyQnzZr7wUo'
 };
 
 // need to return document for beta but *not* for alpha
-const didAlpha = 'did:v1:uuid:40aea416-73b2-436f-bb91-41175494d72b';
-const didBeta = 'did:v1:nym:z6MkwCGzK8WaRM6mfshwpZhJLQpUZD5ePj4PFetLMYa2NCAg';
+const didAlpha = 'did:v1:test:uuid:40aea416-73b2-436f-bb91-41175494d72b';
+const didBeta = 'did:v1:test:nym:z6MkwCGzK8WaRM6mfshwpZhJLQpUZD5ePj' +
+  '4PFetLMYa2NCAg';
 const terribleDids = new Set([didAlpha, didBeta]);
 
 mock.ledgerNode = {
@@ -106,14 +107,14 @@ electorPoolDocument.alpha = {
     constants.WEB_LEDGER_CONTEXT_V1_URL,
     constants.ED25519_2020_CONTEXT_V1_URL,
   ],
-  id: 'did:v1:uuid:b3275fed-daf4-4c07-b63a-747fa8857609',
+  id: 'did:v1:test:uuid:b3275fed-daf4-4c07-b63a-747fa8857609',
   type: 'ElectorPool',
   // FIXME: this has to be in the v1 context before we can sign documents
   // veresOneTicketRate: 10, /* TBD */
   controller: '', // replaced with maintainer's DID in test
   electorPool: [{
     id: 'urn:uuid:89a62413-0ada-461b-b672-1b28afefaca8',
-    elector: 'did:v1:nym:50f28192-8f52-4bf2-a9b1-d203f6611456',
+    elector: 'did:v1:test:nym:50f28192-8f52-4bf2-a9b1-d203f6611456',
     service: 'urn:uuid:50f28192-8f52-4bf2-a9b1-d203f6611456',
     type: ['Continuity2017GuarantorElector', 'Continuity2017Elector'],
     // other restrictions/capabilities like guarantor, recovery,
@@ -131,23 +132,23 @@ electorPoolDocument.alpha = {
 /* eslint-disable quotes, quote-props, max-len */
 privateDidDocuments.alpha = {
   "@context": didContexts,
-  id: 'did:v1:nym:z6MkvTVoxyV4SLdSRxFBY2zgaCgRRU8EpzjxJrRPeKzUrq9w',
+  id: 'did:v1:test:nym:z6MkvTVoxyV4SLdSRxFBY2zgaCgRRU8EpzjxJrRPeKzUrq9w',
   authentication: [{
-    id: 'did:v1:nym:z6MkvTVoxyV4SLdSRxFBY2zgaCgRRU8EpzjxJrRPeKzUrq9w#z6MkvTVoxyV4SLdSRxFBY2zgaCgRRU8EpzjxJrRPeKzUrq9w',
+    id: 'did:v1:test:nym:z6MkvTVoxyV4SLdSRxFBY2zgaCgRRU8EpzjxJrRPeKzUrq9w#z6MkvTVoxyV4SLdSRxFBY2zgaCgRRU8EpzjxJrRPeKzUrq9w',
     type: 'Ed25519VerificationKey2020',
-    controller: 'did:v1:nym:z6MkvTVoxyV4SLdSRxFBY2zgaCgRRU8EpzjxJrRPeKzUrq9w',
+    controller: 'did:v1:test:nym:z6MkvTVoxyV4SLdSRxFBY2zgaCgRRU8EpzjxJrRPeKzUrq9w',
     publicKeyMultibase: 'z6MkvTVoxyV4SLdSRxFBY2zgaCgRRU8EpzjxJrRPeKzUrq9w'
   }],
   "capabilityDelegation": [{
-    id: 'did:v1:nym:z6MkvTVoxyV4SLdSRxFBY2zgaCgRRU8EpzjxJrRPeKzUrq9w#z6MkwHphHeS9GM6hDFnM2bnfu1Ekf9fz8gBcs5cviTDhuV2F',
+    id: 'did:v1:test:nym:z6MkvTVoxyV4SLdSRxFBY2zgaCgRRU8EpzjxJrRPeKzUrq9w#z6MkwHphHeS9GM6hDFnM2bnfu1Ekf9fz8gBcs5cviTDhuV2F',
     type: 'Ed25519VerificationKey2020',
-    controller: 'did:v1:nym:z6MkwHphHeS9GM6hDFnM2bnfu1Ekf9fz8gBcs5cviTDhuV2F',
+    controller: 'did:v1:test:nym:z6MkwHphHeS9GM6hDFnM2bnfu1Ekf9fz8gBcs5cviTDhuV2F',
     publicKeyMultibase: 'z6MkwHphHeS9GM6hDFnM2bnfu1Ekf9fz8gBcs5cviTDhuV2F'
   }],
   "capabilityInvocation": [{
-    id: 'did:v1:nym:z6MkvTVoxyV4SLdSRxFBY2zgaCgRRU8EpzjxJrRPeKzUrq9w#z6MkmzCb5xJTgWjATFq8q9y8rXJNyYFT6Eeaxeb3eY4Kv1iy',
+    id: 'did:v1:test:nym:z6MkvTVoxyV4SLdSRxFBY2zgaCgRRU8EpzjxJrRPeKzUrq9w#z6MkmzCb5xJTgWjATFq8q9y8rXJNyYFT6Eeaxeb3eY4Kv1iy',
     type: 'Ed25519VerificationKey2020',
-    controller: 'did:v1:nym:z6MkmzCb5xJTgWjATFq8q9y8rXJNyYFT6Eeaxeb3eY4Kv1iy',
+    controller: 'did:v1:test:nym:z6MkmzCb5xJTgWjATFq8q9y8rXJNyYFT6Eeaxeb3eY4Kv1iy',
     publicKeyMultibase: 'z6MkmzCb5xJTgWjATFq8q9y8rXJNyYFT6Eeaxeb3eY4Kv1iy'
   }]
 };
@@ -155,15 +156,15 @@ privateDidDocuments.alpha = {
 privateDidDocuments.beta = {
   // FIXME: use constant and cached version when available
   "@context": [constants.DID_CONTEXT_URL, constants.VERES_ONE_CONTEXT_V1_URL],
-  "id": "did:v1:nym:z279nCCZVzxreYfLw3EtFLtBMSVVY2pA6uxKengriMCdG3DF",
+  "id": "did:v1:test:nym:z279nCCZVzxreYfLw3EtFLtBMSVVY2pA6uxKengriMCdG3DF",
   "authentication": [
     {
       "type": "Ed25519SignatureAuthentication2018",
       "publicKey": [
         {
-          "id": "did:v1:nym:z279nCCZVzxreYfLw3EtFLtBMSVVY2pA6uxKengriMCdG3DF#authn-key-1",
+          "id": "did:v1:test:nym:z279nCCZVzxreYfLw3EtFLtBMSVVY2pA6uxKengriMCdG3DF#authn-key-1",
           "type": "Ed25519VerificationKey201X",
-          "controller": "did:v1:nym:z279nCCZVzxreYfLw3EtFLtBMSVVY2pA6uxKengriMCdG3DF",
+          "controller": "did:v1:test:nym:z279nCCZVzxreYfLw3EtFLtBMSVVY2pA6uxKengriMCdG3DF",
           "publicKeyBase58": "7tJdgUebDRaVFR2d8LzV9BK7RMz5aw2AuW5LsEBBAKWs",
           "privateKey": {
             "privateKeyBase58": "4kftxewt3RQUW7k1MoTqEbZW5MnsJszNAwgEqbjJvKmJYeyUJFmkzYwwMZfB7Z5bWFyo1pQJzZL2mLL5zagc3dAT"
@@ -177,9 +178,9 @@ privateDidDocuments.beta = {
       "type": "Ed25519SignatureCapabilityAuthorization2018",
       "publicKey": [
         {
-          "id": "did:v1:nym:z279nCCZVzxreYfLw3EtFLtBMSVVY2pA6uxKengriMCdG3DF#ocap-delegate-key-1",
+          "id": "did:v1:test:nym:z279nCCZVzxreYfLw3EtFLtBMSVVY2pA6uxKengriMCdG3DF#ocap-delegate-key-1",
           "type": "Ed25519VerificationKey2018",
-          "controller": "did:v1:nym:z279nCCZVzxreYfLw3EtFLtBMSVVY2pA6uxKengriMCdG3DF",
+          "controller": "did:v1:test:nym:z279nCCZVzxreYfLw3EtFLtBMSVVY2pA6uxKengriMCdG3DF",
           "publicKeyBase58": "CWERGaLLTsWGAKzpTKpHs9WyZ5Xczgj8HSbcZ7FjGAtQ",
           "privateKey": {
             "privateKeyBase58": "4bzwvphLSbKF3zWEB18dEFusRPSvpFqefeGqUSfNr3dwcN6KD7xNbAG1q1nBAFu7r6Knj4Lmex1zvWXrv632eS4Q"
@@ -193,9 +194,9 @@ privateDidDocuments.beta = {
       "type": "Ed25519SignatureCapabilityAuthorization2018",
       "publicKey": [
         {
-          "id": "did:v1:nym:z279nCCZVzxreYfLw3EtFLtBMSVVY2pA6uxKengriMCdG3DF#ocap-invoke-key-1",
+          "id": "did:v1:test:nym:z279nCCZVzxreYfLw3EtFLtBMSVVY2pA6uxKengriMCdG3DF#ocap-invoke-key-1",
           "type": "Ed25519VerificationKey2018",
-          "controller": "did:v1:nym:z279nCCZVzxreYfLw3EtFLtBMSVVY2pA6uxKengriMCdG3DF",
+          "controller": "did:v1:test:nym:z279nCCZVzxreYfLw3EtFLtBMSVVY2pA6uxKengriMCdG3DF",
           "publicKeyBase58": "5U6TbzeAqQtSq9N52XPHFrF5cWwDPHk96uJvKshP4jN5",
           "privateKey": {
             "privateKeyBase58": "5hvHHCpocudyac6fT6jJCHe2WThQHsKYsjazkGV2L1Umwj5w9HtzcqoZ886yHJdHKbpC4W2qGhUMPbHNPpNDK6Dj"
@@ -212,7 +213,7 @@ didDocuments.alpha = privateDidDocuments.alpha;
 // didDocuments.beta = _stripPrivateKeys(privateDidDocuments.beta);
 
 mock.VALIDATOR_PARAMETER_SET =
-  'did:v1:uuid:b2f1d301-fddd-4743-b666-b7ec8f08c310';
+  'did:v1:test:uuid:b2f1d301-fddd-4743-b666-b7ec8f08c310';
 validatorParameterSet.alpha = {
   '@context': didContexts,
   id: mock.VALIDATOR_PARAMETER_SET,
@@ -237,7 +238,7 @@ ledgerConfigurations.alpha = {
   consensusMethod: 'Continuity2017',
   electorSelectionMethod: {
     type: 'ElectorPoolElectorSelection',
-    electorPool: 'did:v1:uuid:acc4c5af-7445-4046-a39c-10653a0c7ac0'
+    electorPool: 'did:v1:test:uuid:acc4c5af-7445-4046-a39c-10653a0c7ac0'
   },
   operationValidator: [{
     type: 'VeresOneValidator2017',
@@ -334,7 +335,7 @@ operations.updateInvalidChange = {
 };
 
 capabilities.authorizeRequest =
-  'did:v1:uuid:652de430-1d6f-11e8-878c-2bfa41196bf6';
+  'did:v1:test:uuid:652de430-1d6f-11e8-878c-2bfa41196bf6';
 
 /*
 

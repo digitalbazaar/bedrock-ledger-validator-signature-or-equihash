@@ -344,7 +344,7 @@ describe('validate API ElectorPool', () => {
         operation = await attachInvocationProof({
           operation,
           // this DID document does not exist
-          capability: 'did:v1:uuid:e798d4cf-f4f5-40cb-9f06-7fa56cf55d95',
+          capability: 'did:v1:test:uuid:e798d4cf-f4f5-40cb-9f06-7fa56cf55d95',
           capabilityAction: 'write',
           invocationTarget: operation.record.id,
           key,
@@ -405,7 +405,7 @@ describe('validate API ElectorPool', () => {
         ldDocuments.set(electorPoolDoc.id, bedrock.util.clone(electorPoolDoc));
         const observer = jsonpatch.observe(electorPoolDoc);
         const elector =
-          'did:v1:nym:z279squ73dJ3q21jAEk3FRrr37UdX5xo8FXWA74anmPnvzfx';
+          'did:v1:test:nym:z279squ73dJ3q21jAEk3FRrr37UdX5xo8FXWA74anmPnvzfx';
 
         // FIXME: should inline serviceIds be did: URI's?
         const newServiceId = `${elector};service=TheServiceId`;
